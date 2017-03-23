@@ -31,7 +31,7 @@ body {
 	margin-top: 15px;
 }
 
-.start-button {
+button {
 	height: 55px;
 	width: 35%;
 	color: white;
@@ -69,6 +69,7 @@ body {
 	background-color: white;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 5px;
 }
 
 .choice-container:hover {
