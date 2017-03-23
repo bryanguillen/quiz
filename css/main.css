@@ -1,0 +1,18 @@
+body * {
+  box-sizing: border-box;
+}
+
+body {
+	background-color: #e6e6e6;
+}
+
+.container {
+	width: 100%;
+	/* height for dev purposes */ 
+	height: 500px;
+	border: 1px solid black;
+}
+
+.header{
+	text-align: center;
+}
