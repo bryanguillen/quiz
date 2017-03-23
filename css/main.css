@@ -4,15 +4,40 @@ body * {
 
 body {
 	background-color: #e6e6e6;
+	font-family: 'Bree Serif';
 }
 
-.container {
+/* welcoming section styling */
+.container-welcome {
 	width: 100%;
 	/* height for dev purposes */ 
-	height: 500px;
-	border: 1px solid black;
+	height: 100vh;
+	position: relative;
+	padding-top: 25vh;
+	padding-bottom: 25vh; 
 }
 
-.header{
+.header {
 	text-align: center;
+	font-size: 2.25em;
+	display: inline-block;
+	padding-top: 25px;
+}
+
+.welcome {
+	margin-bottom: 5px;
+	margin-top: 0px;
+}
+
+.button-container {
+	text-align: center;
+	margin-top: 15px;
+}
+
+.start-button {
+	height: 55px;
+	width: 35%;
+	color: white;
+	background-color: #33adff;
+	border: 0;
 }
