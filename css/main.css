@@ -31,12 +31,17 @@ body {
 	margin-top: 15px;
 }
 
+/**** note, that this button is for all of the buttons except next on the site ***/
 button {
 	height: 55px;
 	width: 35%;
 	color: white;
 	background-color: #33adff;
 	border: 0;
+}
+
+button:hover {
+	background-color: #0047b3;
 }
 
 .instruction-list {
