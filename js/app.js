@@ -1,5 +1,5 @@
 //state mgmt
-var questionsState = {
+var state = {
 	quizQuestions: [
 	{
 		question: 'If you are in a car going 60' +
@@ -72,52 +72,52 @@ var questionsState = {
    		choices: ['100', '95', '80', 'None Of The Above']
 	}
 	],
-}
 
-var statsState = {
+	stats: {
 	score: 0,
 	questionNumber: 1
-}
-
-var answerState =  {
+	},
+	
+	currentQuestion: {
 	currentAnswer: null,
 	currentChoice: null
+	}
 }
 
-function getCurrentQuestion(state, secondState) {
+function getCurrentQuestion(state) {
 	var index = state.quizQuestions[Math.floor(Math.random() * state.quizQuestions.length)];
-	secondState.currentAnswer = index.answer;
-	return createHTML(questionsState, index);
+	state.currentQuestion.currentAnswer = index.answer;
+	return createHTML(state, index);
 }
 
 function currentChoice(state, choice) {
-	state.currentChoice = choice
+	state.currentQuestion.currentChoice = choice
 }
 
-function checkQuestion(state, stateTwo) {
-	state.questionNumber += 1;
-	if(state.questionNumber > 5) {
-		verifyChoice(state, stateTwo);
-		return renderEndHTML(state.score, $('main'));
+function checkQuestion(state) {
+	state.stats.questionNumber += 1;
+	if(state.stats.questionNumber > 5) {
+		verifyChoice(state, state.currentQuestion.choice);
+		return renderEndHTML(state.stats.score, $('main'));
 	} 
 	else {
-		verifyChoice(state, stateTwo)
+		verifyChoice(state, state.currentQuestion.choice);
 	}
 }
 
-function verifyChoice(state, stateTwo) {
-	if(stateTwo.currentChoice === stateTwo.currentAnswer) {
-		state.score += 1;
-		showCorrectMessage(stateTwo.currentChoice);
+function verifyChoice(state) {
+	if(state.currentQuestion.currentChoice === state.currentQuestion.currentAnswer) {
+		state.stats.score += 1;
+		showCorrectMessage(state.currentQuestion.currentChoice);
 	}
 	else {
-		showIncorrectMessage(stateTwo.currentAnswer, stateTwo.currentChoice)
+		showIncorrectMessage(state.currentQuestion.currentAnswer, state.currentQuestion.currentChoice);
 	}
 }
 
 function resetStats(state) {
-	state.questionNumber = 1;
-	state.score = 0;
+	state.currentQuestion.questionNumber = 1;
+	state.stats.score = 0;
 }
 
 //dom manipulation
@@ -146,7 +146,7 @@ function createHTML(state, index) {
 	'<div class="question-container">' +
 		'<div class="row">' +
 			'<div class="col-12 quiz-question">' +
-				'<div class="question-header">Question: ' + statsState.questionNumber +' of 5'  + '</div>' +
+				'<div class="question-header">Question: ' + state.stats.questionNumber +' of 5'  + '</div>' +
 					'<div class="question">' + question + 
 					'</div>' +
 				'</div>' +
@@ -220,15 +220,15 @@ function renderEndHTML(score, element) {
 function clickRestartHandler() {
 	$('main').on('click', '.js-restart-button', function(event) {
 		event.preventDefault();
-		resetStats(statsState);
-		getCurrentQuestion(questionsState, answerState);
+		resetStats(state);
+		getCurrentQuestion(state);
 	});
 }
 
 function clickNextHandler() {
 	$('main').on('click', '.js-next-button', function(event) {
 		event.preventDefault();
-		getCurrentQuestion(questionsState, answerState);
+		getCurrentQuestion(state);
 	});
 }
 
@@ -236,7 +236,7 @@ function clickSubmitHanlder() {
 	$('main').on('click', '.js-submit-button', function(event) {
 		event.preventDefault();
 		$(this).addClass('hide-submit');
-		checkQuestion(statsState, answerState);
+		checkQuestion(state);
 		$(this).closest('main').find('div.next-button-container').removeClass('hide-next');
 	});
 }
@@ -248,14 +248,14 @@ function clickAnswerHandler() {
 		$(this).closest('main').find('div.js-submit-container').removeClass('hide-submit');
 		$('.js-choice').removeClass('chosen');
 		$(this).addClass('chosen');
-		currentChoice(answerState, $(this).find('span.choice').text());
+		currentChoice(state, $(this).find('span.choice').text());
 	});
 }
 
 function gotItHandler() {
 	$('main').on('click', '.js-got-it', function(event) {
 		event.preventDefault();
-		getCurrentQuestion(questionsState, answerState);
+		getCurrentQuestion(state);
 	});	
 }
 
