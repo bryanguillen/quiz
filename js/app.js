@@ -85,24 +85,24 @@ var state = {
 }
 
 function getCurrentQuestion(state) {
-	var index = state.quizQuestions[Math.floor(Math.random() * state.quizQuestions.length)];
-	state.currentQuestion.currentAnswer = index.answer;
-	return createHTML(state, index);
+	if(state.stats.questionNumber <= 5) {
+		var index = state.quizQuestions[Math.floor(Math.random() * state.quizQuestions.length)];
+		state.currentQuestion.currentAnswer = index.answer;
+		return createHTML(state, index);
+	}
+
+	else{
+		return renderEndHTML(state.stats.score, $('main'));
+	}
 }
 
 function currentChoice(state, choice) {
 	state.currentQuestion.currentChoice = choice
 }
 
-function checkQuestion(state) {
+function incrementQuestion(state) {
 	state.stats.questionNumber += 1;
-	if(state.stats.questionNumber > 5) {
-		verifyChoice(state, state.currentQuestion.choice);
-		return renderEndHTML(state.stats.score, $('main'));
-	} 
-	else {
-		verifyChoice(state, state.currentQuestion.choice);
-	}
+	verifyChoice(state, state.currentQuestion.choice);
 }
 
 function verifyChoice(state) {
@@ -116,8 +116,9 @@ function verifyChoice(state) {
 }
 
 function resetStats(state) {
-	state.currentQuestion.questionNumber = 1;
+	state.stats.questionNumber = 1;
 	state.stats.score = 0;
+	getCurrentQuestion(state);
 }
 
 //dom manipulation
@@ -221,7 +222,6 @@ function clickRestartHandler() {
 	$('main').on('click', '.js-restart-button', function(event) {
 		event.preventDefault();
 		resetStats(state);
-		getCurrentQuestion(state);
 	});
 }
 
@@ -236,7 +236,7 @@ function clickSubmitHanlder() {
 	$('main').on('click', '.js-submit-button', function(event) {
 		event.preventDefault();
 		$(this).addClass('hide-submit');
-		checkQuestion(state);
+		incrementQuestion(state);
 		$(this).closest('main').find('div.next-button-container').removeClass('hide-next');
 	});
 }
