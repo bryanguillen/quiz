@@ -63,7 +63,7 @@ var questionsState = {
 	{
 		question: 'How many degrees does a car tire roatate while driving?',
 		answer: '360',
-		choices: ['WHAT? Obviously None Of These', '360', '180', '0']
+		choices: ['What? dk', '360', '180', '0']
 	},
 	{
 		question: 'If you get two 90s and an 80 on tests, what must you get in order on the last test ' +
@@ -119,6 +119,27 @@ function getCurrentQuestion(state, secondState) {
 //dom manipulation
 function endButton(score) {
 	//shows end button which user clicks to see results
+	$('main').find('button.black-button').addClass('js-end-button');
+	return endHTML(score, $('main'));
+}
+
+function endHTML(score, element) {
+	var end = '<main class="js-main">' +
+				'<div class="container-end">' +
+					'<div class="row">' +
+						'<div class="col-12 header">' +
+							'<h1 class="end">THE END</h1>' +
+							'<span>You socred a ' + score + ' out of 5!</span>' +
+						'</div>' +
+					'</div>' +
+					'<div class="row">' +
+						'<div class="col-12 button-container">' +
+							'<button class="js-restart-button blue-button"><span>Restart Quiz!</span></button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</main>'
+	element.html(end)
 }
 
 function showCorrectMessage(choice) {
@@ -187,14 +208,21 @@ function renderInstructions(currentTarget) {
 }
 
 //listeners
-function clickNext() {
+function clickRestartHandler() {
+	$('main').on('click', '.js-restart-button', function(event) {
+		event.preventDefault();
+		//resetStats(statsState);
+	});
+}
+
+function clickNextHandler() {
 	$('main').on('click', '.js-next-button', function(event) {
 		event.preventDefault();
 		getCurrentQuestion(questionsState, answerState);
 	});
 }
 
-function clickSubmit() {
+function clickSubmitHanlder() {
 	$('main').on('click', '.js-submit-button', function(event) {
 		event.preventDefault();
 		$(this).addClass('hide-submit');
@@ -237,6 +265,7 @@ $(function() {
 	startQuizHandler();
 	gotItHandler(); 
 	clickAnswerHandler();
-	clickSubmit();
-	clickNext();
+	clickSubmitHanlder();
+	clickNextHandler();
+	clickRestartHandler();
 }) 
