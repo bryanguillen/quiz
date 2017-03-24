@@ -72,7 +72,6 @@ var questionsState = {
    		choices: ['100', '95', '80', 'None Of The Above']
 	}
 	],
-	//default value of the question number
 }
 
 var statsState = {
@@ -85,11 +84,21 @@ var answerState =  {
 	currentChoice: null
 }
 
-function checkQuestionNumber(state, stateTwo) {
+function getCurrentQuestion(state, secondState) {
+	var index = state.quizQuestions[Math.floor(Math.random() * state.quizQuestions.length)];
+	secondState.currentAnswer = index.answer;
+	return createHTML(questionsState, index);
+}
+
+function currentChoice(state, choice) {
+	state.currentChoice = choice
+}
+
+function checkQuestion(state, stateTwo) {
 	state.questionNumber += 1;
 	if(state.questionNumber > 5) {
 		verifyChoice(state, stateTwo);
-		return endButton(state.score);
+		return renderEndHTML(state.score, $('main'));
 	} 
 	else {
 		verifyChoice(state, stateTwo)
@@ -106,50 +115,29 @@ function verifyChoice(state, stateTwo) {
 	}
 }
 
-function currentChoice(state, choice) {
-	state.currentChoice = choice
-}
-
-function getCurrentQuestion(state, secondState) {
-	var index = state.quizQuestions[Math.floor(Math.random() * state.quizQuestions.length)];
-	secondState.currentAnswer = index.answer;
-	return createHTML(questionsState, index);
+function resetStats(state) {
+	state.questionNumber = 1;
+	state.score = 0;
 }
 
 //dom manipulation
-function endButton(score) {
-	//shows end button which user clicks to see results
-	$('main').find('button.black-button').addClass('js-end-button');
-	return endHTML(score, $('main'));
-}
-
-function endHTML(score, element) {
-	var end = '<main class="js-main">' +
-				'<div class="container-end">' +
-					'<div class="row">' +
-						'<div class="col-12 header">' +
-							'<h1 class="end">THE END</h1>' +
-							'<span>You socred a ' + score + ' out of 5!</span>' +
+function renderInstructions(element) {
+	var instructions = '<main class="js-main">' +
+						'<div class="container-welcome">' +
+							'<div class="row">' +
+								'<div class="col-12 header">' +
+									'<h1 class="welcome">Quiz Rules</h1>' +
+									'<span>Just Simply Click Answer And Scroll Down & Submit!</span>' +
+								'</div>' +
+							'</div>' +
+							'<div class="row">' +
+								'<div class="col-12 button-container">' +
+									'<button class="js-got-it blue-button"><span>Got It!</span></button>' +
+								'</div>' +
+							'</div>' +
 						'</div>' +
-					'</div>' +
-					'<div class="row">' +
-						'<div class="col-12 button-container">' +
-							'<button class="js-restart-button blue-button"><span>Restart Quiz!</span></button>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-			'</main>'
-	element.html(end)
-}
-
-function showCorrectMessage(choice) {
-	$('main').find('div.result-message').removeClass('hide-result');
-	$('main').find('span.correct-message').text(choice + ' is correct!');
-}
-
-function showIncorrectMessage(answer, choice) {
-	$('main').find('div.result-message').removeClass('hide-result');
-	$('main').find('span.incorrect-message').text(choice + ' is wrong, the correct choice is ' + answer);
+					'</main>'
+	element.html(instructions)
 }
 
 function createHTML(state, index) {
@@ -166,7 +154,6 @@ function createHTML(state, index) {
 		'</div>'
 
 	function choicesHTML(state, index) {
-		var letters = ['A ', 'B ', 'C ', 'D '];
 		var message = '<div class="result-message hide-result">' +
 							'<div class="row">' +
 								'<div class="col-12">' +
@@ -188,10 +175,10 @@ function createHTML(state, index) {
 		var html = '';
 		for(var i = 0, length = index.choices.length; i < length; i++) {
 			html += '<div class="choice-container js-choice"><div class="row"><div class="col-12 quiz-choice">\
-			<span class="letter-choice letter">' + letters[i] + '</span><span class="letter-choice choice">'+ 
+			<span class="letter-choice choice">'+ 
 			index.choices[i] + '</span> </div> </div> </div>';
 		} 
-		return renderQuestion($('.js-main'), questionHTML  + '<div class="choices-container">' + message + html + '</div>' + buttons);
+		return renderQuestion($('main'), questionHTML  + '<div class="choices-container">' + message + html + '</div>' + buttons);
 	}
 	choicesHTML(state, index);
 }
@@ -200,18 +187,41 @@ function renderQuestion(element, question) {
 	element.html(question);
 }
 
-function renderInstructions(currentTarget) {
-	currentTarget.toggleClass('js-start-button').addClass('js-got-it');
-	currentTarget.text('Got It!');
-	currentTarget.closest('main').find('span').text('Just Simply Click Answer And Scroll Down & Submit!');
-	currentTarget.closest('main').find('h1').text('Quiz Rules');
+function showCorrectMessage(choice) {
+	$('main').find('div.result-message').removeClass('hide-result');
+	$('main').find('span.correct-message').text(choice + ' is correct!');
+}
+
+function showIncorrectMessage(answer, choice) {
+	$('main').find('div.result-message').removeClass('hide-result');
+	$('main').find('span.incorrect-message').text(choice + ' is wrong, the correct choice is ' + answer);
+}
+
+function renderEndHTML(score, element) {
+	var end = '<main class="js-main">' +
+				'<div class="container-end">' +
+					'<div class="row">' +
+						'<div class="col-12 header">' +
+							'<h1 class="end">THE END</h1>' +
+							'<span>You socred a ' + score + ' out of 5!</span>' +
+						'</div>' +
+					'</div>' +
+					'<div class="row">' +
+						'<div class="col-12 button-container">' +
+							'<button class="js-restart-button blue-button"><span>Restart Quiz!</span></button>' +
+						'</div>' +
+					'</div>' +
+				'</div>' +
+			'</main>'
+	element.html(end)
 }
 
 //listeners
 function clickRestartHandler() {
 	$('main').on('click', '.js-restart-button', function(event) {
 		event.preventDefault();
-		//resetStats(statsState);
+		resetStats(statsState);
+		getCurrentQuestion(questionsState, answerState);
 	});
 }
 
@@ -226,10 +236,8 @@ function clickSubmitHanlder() {
 	$('main').on('click', '.js-submit-button', function(event) {
 		event.preventDefault();
 		$(this).addClass('hide-submit');
-		//this is where answer gets checked!
-		checkQuestionNumber(statsState, answerState);
-		var nextButton = $(this).closest('main').find('div.next-button-container');
-		nextButton.removeClass('hide-next');
+		checkQuestion(statsState, answerState);
+		$(this).closest('main').find('div.next-button-container').removeClass('hide-next');
 	});
 }
 
@@ -237,11 +245,9 @@ function clickAnswerHandler() {
 	$('main').on('click', '.js-choice', function(event) {
 		event.preventDefault();
 		//next five lines change css to highlight user answer and show submit button
-		var submitButton = $(this).closest('main').find('div.js-submit-container');
-		submitButton.removeClass('hide-submit');
+		$(this).closest('main').find('div.js-submit-container').removeClass('hide-submit');
 		$('.js-choice').removeClass('chosen');
 		$(this).addClass('chosen');
-		///
 		currentChoice(answerState, $(this).find('span.choice').text());
 	});
 }
@@ -256,8 +262,7 @@ function gotItHandler() {
 function startQuizHandler() {
 	$('main').on('click', '.js-start-button', function(event) {
 		event.preventDefault();
-		var currentTarget = $(this)
-		renderInstructions(currentTarget);
+		renderInstructions($('main'));
 	});
 }
 
