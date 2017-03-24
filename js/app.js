@@ -8,11 +8,23 @@ var questionsState = {
 		answer: '60 minutes',
 		choices: ['45 minutes', '2 hours', '60 minutes', '10 minutes'],
 		rendered: false
-	}
+	},
+	{
+		question: 'You are in an elevator with 3 other people.' + 
+		' You weigh 150 lbs, the person next to you weighs the' +
+		' same as you, and the two other people in front of you ' + 
+		'weigh 100 pounds. The elevator\'s max capacity is 650 lbs.' + 
+		' What weight should the person be, if you want to get stuck in the elevator as an excuse to miss work?',
+		answer: '150 lbs',
+		choices: ['145 lbs', '150 lbs', '170 lbs', '200 lbs'],
+		rendered: false
+	},
+	
 	],
 	//default value of the question number
-	questionCounter: 1
 }
+
+var questionCounterState = 1;
 
 var answerState =  {
 		currentAnswer: null,
@@ -36,13 +48,18 @@ function currentChoice(state, choice) {
 }
 
 function getCurrentQuestion(state, secondState) {
-	for (var i = 0, length = state.quizQuestions.length; i >= 0; i++) {
-		var rendered = state.quizQuestions[i].rendered;
-		if(!rendered) {
-			rendered = true;
-			secondState.currentAnswer = state.quizQuestions[i].answer;
-			return createHTML(questionsState, i);
-		}
+	var index = state.quizQuestions[Math.floor(Math.random() * state.quizQuestions.length)];
+	secondState.currentAnswer = index.answer;
+	return createHTML(questionsState, index, questionCounterState);
+}
+
+function getQuestionCounter(state) {
+	if(state === 5) {
+		//TODO remove this!
+		return false
+	}
+	else {
+		state += 1;
 	}
 }
 
@@ -57,14 +74,14 @@ function showIncorrectMessage(state, choice) {
 	$('main').find('span.incorrect-message').text(choice + ' is wrong, the correct choice is ' + state.currentAnswer);
 }
 
-function createHTML(state, index) {
-	var question = state.quizQuestions[index].question;
+function createHTML(state, index, questionCounterState) {
+	var question = index.question;
 	var questionHTML = 
 	'<div class="question-container">' +
 		'<div class="row">' +
 			'<div class="col-12 quiz-question">' +
-				'<div class="question-header">Question:</div>' +
-					'<div class="question">' + question +
+				'<div class="question-header">Question: ' + questionCounterState + ' of 5'  + '</div>' +
+					'<div class="question">' + question + 
 					'</div>' +
 				'</div>' +
 			'</div>' +
@@ -85,16 +102,16 @@ function createHTML(state, index) {
 								'<button type="submit" class="blue-button js-submit-button">Submit</button>' +
 							'</div>' +
 						'</div>' +
-						'<div class="row next-button-container js-next-button hide-next">' +
+						'<div class="row next-button-container hide-next">' +
 							'<div class="col-12">' +
-								'<button type="submit" class="black-button">Next</button>' +
+								'<button type="submit" class="black-button js-next-button">Next</button>' +
 							'</div>' +
 						'</div>'
 		var html = '';
-		for(var i = 0, length = state.quizQuestions[index].choices.length; i < length; i++) {
+		for(var i = 0, length = index.choices.length; i < length; i++) {
 			html += '<div class="choice-container js-choice"><div class="row"><div class="col-12 quiz-choice">\
 			<span class="letter-choice letter">' + letters[i] + '</span><span class="letter-choice choice">'+ 
-			state.quizQuestions[index].choices[i] + '</span> </div> </div> </div>';
+			index.choices[i] + '</span> </div> </div> </div>';
 		} 
 		return renderQuestion($('.js-main'), questionHTML  + '<div class="choices-container">' + message + html + '</div>' + buttons);
 	}
@@ -113,13 +130,21 @@ function renderInstructions(currentTarget) {
 }
 
 //listeners
+function clickNext() {
+	$('main').on('click', '.js-next-button', function(event) {
+		event.preventDefault();
+		getQuestionCounter(questionCounterState);
+		getCurrentQuestion(questionsState, answerState);
+	});
+}
+
 function clickSubmit() {
 	$('main').on('click', '.js-submit-button', function(event) {
 		event.preventDefault();
 		$(this).addClass('hide-submit');
 		//this is where answer gets checked!
 		verifyChoice(answerState, scoreState);
-		var nextButton = $(this).closest('main').find('div.js-next-button');
+		var nextButton = $(this).closest('main').find('div.next-button-container');
 		nextButton.removeClass('hide-next');
 	});
 }
@@ -157,4 +182,5 @@ $(function() {
 	gotItHandler(); 
 	clickAnswerHandler();
 	clickSubmit();
+	clickNext();
 }) 
