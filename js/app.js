@@ -75,22 +75,34 @@ var questionsState = {
 	//default value of the question number
 }
 
-var questionCounterState = 1;
-
-var answerState =  {
-		currentAnswer: null,
-		currentChoice: null
+var statsState = {
+	score: 0,
+	questionNumber: 1
 }
 
-var scoreState = 0;
+var answerState =  {
+	currentAnswer: null,
+	currentChoice: null
+}
+
+function checkQuestionNumber(state, stateTwo) {
+	state.questionNumber += 1;
+	if(state.questionNumber > 5) {
+		verifyChoice(state, stateTwo);
+		return endButton(state.score);
+	} 
+	else {
+		verifyChoice(state, stateTwo)
+	}
+}
 
 function verifyChoice(state, stateTwo) {
-	if(state.currentChoice === state.currentAnswer) {
-		stateTwo += 1;
-		showCorrectMessage(state.currentChoice);
+	if(stateTwo.currentChoice === stateTwo.currentAnswer) {
+		state.score += 1;
+		showCorrectMessage(stateTwo.currentChoice);
 	}
 	else {
-		showIncorrectMessage(answerState, state.currentChoice);
+		showIncorrectMessage(stateTwo.currentAnswer, stateTwo.currentChoice)
 	}
 }
 
@@ -101,37 +113,31 @@ function currentChoice(state, choice) {
 function getCurrentQuestion(state, secondState) {
 	var index = state.quizQuestions[Math.floor(Math.random() * state.quizQuestions.length)];
 	secondState.currentAnswer = index.answer;
-	return createHTML(questionsState, index, questionCounterState);
-}
-
-function getQuestionCounter(state) {
-	if(state === 5) {
-		//TODO remove this!
-		return false
-	}
-	else {
-		state += 1;
-	}
+	return createHTML(questionsState, index);
 }
 
 //dom manipulation
+function endButton(score) {
+	//shows end button which user clicks to see results
+}
+
 function showCorrectMessage(choice) {
 	$('main').find('div.result-message').removeClass('hide-result');
 	$('main').find('span.correct-message').text(choice + ' is correct!');
 }
 
-function showIncorrectMessage(state, choice) {
+function showIncorrectMessage(answer, choice) {
 	$('main').find('div.result-message').removeClass('hide-result');
-	$('main').find('span.incorrect-message').text(choice + ' is wrong, the correct choice is ' + state.currentAnswer);
+	$('main').find('span.incorrect-message').text(choice + ' is wrong, the correct choice is ' + answer);
 }
 
-function createHTML(state, index, questionCounterState) {
+function createHTML(state, index) {
 	var question = index.question;
 	var questionHTML = 
 	'<div class="question-container">' +
 		'<div class="row">' +
 			'<div class="col-12 quiz-question">' +
-				'<div class="question-header">Question: ' + questionCounterState + ' of 5'  + '</div>' +
+				'<div class="question-header">Question: ' + statsState.questionNumber +' of 5'  + '</div>' +
 					'<div class="question">' + question + 
 					'</div>' +
 				'</div>' +
@@ -184,7 +190,6 @@ function renderInstructions(currentTarget) {
 function clickNext() {
 	$('main').on('click', '.js-next-button', function(event) {
 		event.preventDefault();
-		getQuestionCounter(questionCounterState);
 		getCurrentQuestion(questionsState, answerState);
 	});
 }
@@ -194,7 +199,7 @@ function clickSubmit() {
 		event.preventDefault();
 		$(this).addClass('hide-submit');
 		//this is where answer gets checked!
-		verifyChoice(answerState, scoreState);
+		checkQuestionNumber(statsState, answerState);
 		var nextButton = $(this).closest('main').find('div.next-button-container');
 		nextButton.removeClass('hide-next');
 	});
