@@ -80,6 +80,14 @@ button:hover {
 	display: none !important;
 }
 
+.correct-message {
+	color: green;
+}
+
+.incorrect-message {
+	color: red;
+}
+
 .chosen {
 	background-color: #f5f5f0 !important;
 }
