@@ -28,8 +28,8 @@ var state = {
 		question: 'You have 3 siblings. One is 5 foot 8 inches tall, ' +
 		'another 6 foot tall, another 5 foot 5 tall, and you 6 foot tall. Your parents ' +
    		'are having another baby after 20 years. About how tall should you expect this new baby to be when its your age?',
-   		answer: '5 foot 9 inches',
-   		choices: ['5 foot 9 inches', '6 foot 2 inches', '5 foot 6 inches', '5 foot 7 inches']
+   		answer: '5 foot 7 inches',
+   		choices: ['4 foot 9 inches', '6 foot 2 inches', '5 foot 2 inches', '5 foot 7 inches']
 	},
 	{
 		question: 'You weigh 180 lbs, and you need to be under 167 lbs, ' +
