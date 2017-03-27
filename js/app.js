@@ -12,10 +12,10 @@ var state = {
 		question: 'You are in an elevator with 3 other people.' + 
 		' You weigh 150 lbs, the person next to you weighs the' +
 		' same as you, and the two other people in front of you ' + 
-		'weigh 100 pounds. The elevator\'s max capacity is 650 lbs.' + 
-		' What weight should the person be, if you want to get stuck in the elevator as an excuse to miss work?',
+		'weigh 100 pounds. Anything greater than or equal to 650 lbs gets the elevator stuck.' + 
+		' What minimum weight should the next person coming into elevator be, if you want to get stuck in the elevator as an excuse to miss work?',
 		answer: '150 lbs',
-		choices: ['145 lbs', '150 lbs', '170 lbs', '200 lbs']
+		choices: ['145 lbs', '150 lbs', '90 lbs', '100 lbs']
 	},
 	{
 		question: 'You walk west 3 miles and then south 4 miles. ' +
@@ -204,7 +204,7 @@ function renderEndHTML(score, element) {
 					'<div class="row">' +
 						'<div class="col-12 header">' +
 							'<h1 class="end">THE END</h1>' +
-							'<span>You socred a ' + score + ' out of 5!</span>' +
+							'<span>You scored a ' + score + ' out of 5!</span>' +
 						'</div>' +
 					'</div>' +
 					'<div class="row">' +
