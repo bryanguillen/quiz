@@ -7,7 +7,7 @@ body {
 	font-family: 'Bree Serif';
 }
 
-.container-welcome, .container-end {
+.welcome-container, .end-container {
 	width: 100%; 
 	height: 100vh;
 	padding-top: 20vh;

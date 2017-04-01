@@ -123,8 +123,8 @@ function resetStats(state) {
 
 //dom manipulation
 function renderInstructions(element) {
-	var instructions = '<main class="js-main">' +
-						'<div class="container-welcome">' +
+	var instructions = '<main>' +
+						'<div class="welcome-container">' +
 							'<div class="row">' +
 								'<div class="col-12 header">' +
 									'<h1 class="welcome">Quiz Rules</h1>' +
@@ -199,8 +199,8 @@ function showIncorrectMessage(answer, choice) {
 }
 
 function renderEndHTML(score, element) {
-	var end = '<main class="js-main">' +
-				'<div class="container-end">' +
+	var end = '<main>' +
+				'<div class="end-container">' +
 					'<div class="row">' +
 						'<div class="col-12 header">' +
 							'<h1 class="end">THE END</h1>' +
