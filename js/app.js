@@ -165,12 +165,12 @@ function createHTML(state, index) {
 						'</div>'
 		var buttons = '<div class="row button-container hide-submit js-submit-container">' +
 							'<div class="col-12">' +
-								'<button type="submit" class="blue-button js-submit-button">Submit</button>' +
+								'<button type="submit" class="blue-button submit-button js-submit-button">Submit</button>' +
 							'</div>' +
 						'</div>' +
 						'<div class="row next-button-container hide-next">' +
 							'<div class="col-12">' +
-								'<button type="submit" class="black-button js-next-button">Next</button>' +
+								'<button type="submit" class="black-button next-button js-next-button">Next</button>' +
 							'</div>' +
 						'</div>'
 		var html = '';
